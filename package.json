@@ -10,6 +10,7 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
     "@icon-park/vue-next": "^1.4.2",
     "axios": "^1.4.0",
     "element-plus": "^2.3.7",
