@@ -70,7 +70,7 @@ const login = () => {
           type: 'success'
         })
         router.push({
-          path:'/customers/personInfo'+res.data[0].customerId,
+          path: '/customers/personInfo' + res.data[0].customerId,
         })
       } else {
         ElMessage({
@@ -89,7 +89,7 @@ const login = () => {
         // router.push({
         //   path: '/students/' + res.data[0].studentId
         // })
-      } else  {
+      } else {
         ElMessage({
           message: '用户名或密码错误',
           type: 'error'
@@ -98,14 +98,15 @@ const login = () => {
     })
   } else {
     request.post("/employees-entity/login", form.value).then((res) => {
-      if (res.data.length != 0) {
+      console.log(res.data[0])
+      if (res.data.length!=0) {
         ElMessage({
           message: '登录成功',
           type: 'success'
         })
-        // router.push({
-        //   path:'/students/'+res.data[0].studentId
-        // })
+        router.push({
+          path:'/administratorMain/'+res.data[0].employeeId
+        })
       } else {
         ElMessage({
           message: '用户名或密码错误',
