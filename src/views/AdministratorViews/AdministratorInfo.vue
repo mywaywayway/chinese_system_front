@@ -160,7 +160,6 @@ import {
   Male,
   Help,
 } from "@icon-park/vue-next";
-import {Edit} from '@element-plus/icons-vue'
 import request from "@/request/request";
 import {ElMessage} from "element-plus";
 
@@ -181,7 +180,6 @@ const adminData = reactive({
 })
 
 const adminId = inject("adminId")
-console.log(adminId)
 request.get("/employees-entity/getEmployeeById/" + adminId).then(res => {
   adminData.adminInfo = res.data
 })
@@ -190,7 +188,6 @@ const editInfoVisible = ref(false)
 const editInfo = () => {
   adminData.editInfo = JSON.parse(JSON.stringify(adminData.adminInfo))
   editInfoVisible.value = true
-  console.log(adminData.editInfo)
 }
 
 const sureEditInfo = () => {
