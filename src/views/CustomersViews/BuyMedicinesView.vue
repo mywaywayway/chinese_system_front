@@ -38,7 +38,7 @@
               <el-menu-item-group>
                 <el-menu-item  @click="onPersonInfo">个人信息</el-menu-item>
                 <el-menu-item  @click="onBuyMedicines">药品购买</el-menu-item>
-                <el-menu-item  @click="">个人购买记录</el-menu-item>
+                <el-menu-item  @click="onPersonPurchaseHistory">个人购买记录</el-menu-item>
               </el-menu-item-group>
 
 
@@ -50,9 +50,8 @@
               <div style="display: flex;margin-top: 100px">
 
                 <el-input placeholder="请输入药品名称" v-model="search" style="width: 200px  " ></el-input>
-                <el-button style="margin-left: 50px">搜索</el-button>
               </div>
-          <el-table :data="medicineData" style="width: 100%">
+          <el-table :data="filterData" style="width: 100%">
             <el-table-column fixed prop="medicineId" label="药品ID" width="150" />
             <el-table-column prop="medicineName" label="药品名" width="120" />
             <el-table-column prop="stockQuantity" label="库存" width="120" />
@@ -70,12 +69,11 @@
             </el-table-column>
 
             <el-table-column prop="introduction" label="介绍" width="600" />
-            <el-table-column fixed="right" label="Operations" width="120">
+            <el-table-column fixed="right" label="操作" width="120">
               <template #default="scope">
                 <el-button link type="primary" size="small" @click="onBuy(scope.row)"
-                >Detail</el-button
+                >购买</el-button
                 >
-                <el-button link type="primary" size="small">Edit</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -110,9 +108,10 @@
 
 import router from "@/router";
 import {useRouter} from "vue-router";
-import {onMounted, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import request from "@/request/request";
 import type {medicine, salesInformation} from "@/myInterface/entity";
+import {ElMessage} from "element-plus";
 
 const myRouter = useRouter()
 
@@ -132,6 +131,7 @@ const pageData = reactive({
 const saleData=reactive({
   saleInfo:{} as salesInformation
 })
+
 const  onBuy=(row)=>{
     pageData.unitPrice=row.unitPrice
     pageData.medicineName=row.medicineName
@@ -144,7 +144,19 @@ const  onBuy=(row)=>{
 
   BuyMedicinesDialogVisible.value=true
 }
+const onPersonPurchaseHistory=()=>{
+  router.push({
+    path:"/customers/PersonalPurchaseHistory"+pageData.personId
+  })
+}
 const makeSureBuyMedicines=()=>{
+  if (saleData.saleInfo.quantity== "0"){
+     ElMessage({
+       message:'数量不能为0',
+       type:"error"
+     })
+    return
+  }
         saleData.saleInfo.totalPrice=saleData.saleInfo.quantity*pageData.unitPrice
   let date=new Date()
   let year=date.getFullYear()
@@ -162,10 +174,30 @@ const makeSureBuyMedicines=()=>{
     }
   }
     saleData.saleInfo.salesDate=strDate
-
+     request.post("/sales-information-entity/inster",saleData.saleInfo).then(res=>{
+       if (res.data == 1){
+         ElMessage({
+           message:'购买成功',
+           type:'success'
+         })
+         BuyMedicinesDialogVisible.value=false
+       }else {
+         ElMessage({
+           message:'购买失败',
+           type:'error'
+         })
+       }
+     })
 }
 const medicineData:medicine[]=reactive([])
 const search=ref("")
+
+const filterData = computed(()=>{
+    return medicineData.filter((item:medicine)=>{
+      return item.medicineName.includes(search.value) || item.supplierId.includes(search.value)
+    })
+})
+
  const  onBuyMedicines=()=>{
    router.push({
      path:'/customers/BuyMedicines'+pageData.personId

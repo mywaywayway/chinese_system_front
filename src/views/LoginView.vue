@@ -135,9 +135,9 @@ const login = () => {
           message: '登录成功',
           type: 'success'
         })
-        // router.push({
-        //   path: '/students/' + res.data[0].studentId
-        // })
+        router.push({
+          path: '/supplier/PersonalInformation' + res.data[0].supplierId
+        })
       } else  {
         ElMessage({
           message: '用户名或密码错误',

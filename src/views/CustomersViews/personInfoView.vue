@@ -37,7 +37,7 @@
               <el-menu-item-group>
                 <el-menu-item index="1-2" @click="onPersonInfo">个人信息</el-menu-item>
                 <el-menu-item index="1-3" @click="onBuyMedicines">药品购买</el-menu-item>
-                <el-menu-item index="1-4" @click="">个人购买记录</el-menu-item>
+                <el-menu-item index="1-4" @click="onPersonPurchaseHistory">个人购买记录</el-menu-item>
               </el-menu-item-group>
 
 
@@ -164,7 +164,9 @@
     <el-form-item label="邮箱">
       <el-input v-model="personData.changeInfo.email"></el-input>
     </el-form-item>
-
+    <el-form-item label="住址">
+      <el-input v-model="personData.changeInfo.address"></el-input>
+    </el-form-item>
     <el-form-item label="客户名字">
       <el-input v-model="personData.changeInfo.customerName"></el-input>
     </el-form-item>
@@ -205,6 +207,12 @@ const  onBuyMedicines=()=>{
     path:'/customers/BuyMedicines'+pageData.personId
   })
 }
+const onPersonPurchaseHistory=()=>{
+  router.push({
+    path:"/customers/PersonalPurchaseHistory"+pageData.personId
+  })
+}
+
 const changePassWordDialogVisible=ref(false)
 
 const pageData = reactive({
